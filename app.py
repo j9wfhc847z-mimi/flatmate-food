@@ -453,10 +453,10 @@ Rules:
 - Keep the answer clear and concise.
 """
 
-        try:
+    try:
             with st.spinner("Generating recipe ideas..."):
                 client = OpenAI(
-                    api_key=os.getenv("GROQ_API_KEY"),
+                    api_key=api_key,
                     base_url="https://api.groq.com/openai/v1"
                 )
 
@@ -479,7 +479,7 @@ Rules:
 
                 st.markdown(response.choices[0].message.content)
 
-        except Exception as e:
+    except Exception as e:
             st.error(f"AI API error: {type(e).__name__}")
             st.code(str(e))
             print(f"Groq API error: {type(e).__name__}: {e}")
