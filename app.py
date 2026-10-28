@@ -410,20 +410,26 @@ try:
 except Exception:
     pass
 
-if not api_key:
-    st.error("Groq API key not found. Please check your app secrets.")
-elif not st.session_state.ingredients:
-        st.warning("Add some ingredients to your kitchen stock first.")
-else:
-        stock_list = [
-            item["name"] for item in st.session_state.ingredients
-        ]
-        equipment_list = (
-            available_equipment if available_equipment
-            else ["No-cook"]
-        )
+    api_key = os.getenv("GROQ_API_KEY")
+    try:
+            api_key = st.secrets.get("GROQ_API_KEY", api_key)
+    except Exception:
+            pass
 
-        prompt = f"""
+    if not api_key:
+            st.error("Groq API key not found. Please check your app secrets.")
+    elif not st.session_state.ingredients:
+            st.warning("Add some ingredients to your kitchen stock first.")
+    else:
+            stock_list = [
+                item["name"] for item in st.session_state.ingredients
+            ]
+            equipment_list = (
+                available_equipment if available_equipment
+                else ["No-cook"]
+            )
+
+    prompt = f"""
 You are the recipe assistant for FlatMate Food,
 an app designed to reduce food waste in shared kitchens.
 
