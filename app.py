@@ -404,32 +404,25 @@ st.write(
 
 if st.button("Generate AI recipe suggestions"):
     api_key = os.getenv("GROQ_API_KEY")
-
-try:
-    api_key = st.secrets.get("GROQ_API_KEY", api_key)
-except Exception:
-    pass
-
-    api_key = os.getenv("GROQ_API_KEY")
     try:
-            api_key = st.secrets.get("GROQ_API_KEY", api_key)
+        api_key = st.secrets.get("GROQ_API_KEY", api_key)
     except Exception:
-            pass
+        pass
 
     if not api_key:
-            st.error("Groq API key not found. Please check your app secrets.")
+        st.error("Groq API key not found. Please check your app secrets.")
     elif not st.session_state.ingredients:
-            st.warning("Add some ingredients to your kitchen stock first.")
+        st.warning("Add some ingredients to your kitchen stock first.")
     else:
-            stock_list = [
-                item["name"] for item in st.session_state.ingredients
-            ]
-            equipment_list = (
-                available_equipment if available_equipment
-                else ["No-cook"]
-            )
+        stock_list = [
+            item["name"] for item in st.session_state.ingredients
+        ]
+        equipment_list = (
+            available_equipment if available_equipment
+            else ["No-cook"]
+        )
 
-    prompt = f"""
+        prompt = f"""
 You are the recipe assistant for FlatMate Food,
 an app designed to reduce food waste in shared kitchens.
 
@@ -453,7 +446,7 @@ Rules:
 - Keep the answer clear and concise.
 """
 
-    try:
+        try:
             with st.spinner("Generating recipe ideas..."):
                 client = OpenAI(
                     api_key=api_key,
@@ -479,7 +472,7 @@ Rules:
 
                 st.markdown(response.choices[0].message.content)
 
-    except Exception as e:
+        except Exception as e:
             st.error(f"AI API error: {type(e).__name__}")
             st.code(str(e))
             print(f"Groq API error: {type(e).__name__}: {e}")
