@@ -403,11 +403,18 @@ st.write(
 )
 
 if st.button("Generate AI recipe suggestions"):
-    if not os.getenv("GROQ_API_KEY"):
-        st.error("Groq API key not found. Please check your Codespaces secrets.")
-    elif not st.session_state.ingredients:
+    api_key = os.getenv("GROQ_API_KEY")
+
+try:
+    api_key = st.secrets.get("GROQ_API_KEY", api_key)
+except Exception:
+    pass
+
+if not api_key:
+    st.error("Groq API key not found. Please check your app secrets.")
+elif not st.session_state.ingredients:
         st.warning("Add some ingredients to your kitchen stock first.")
-    else:
+else:
         stock_list = [
             item["name"] for item in st.session_state.ingredients
         ]
